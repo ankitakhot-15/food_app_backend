@@ -217,7 +217,7 @@ router.get("/", protect, adminOnly, getAllOrders);
  *             properties:
  *               status:
  *                 type: string
- *                 example: Completed
+ *                 example: Delivered
  *     responses:
  *       200:
  *         description: Order status updated

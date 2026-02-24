@@ -34,6 +34,65 @@
 // const swaggerSpec = swaggerJSDoc(options);
 
 // export default swaggerSpec;
+/**
+ * @swagger
+ * tags:
+ *   name: Payment
+ *   description: Razorpay Payment APIs
+ */
+
+/**
+ * @swagger
+ * /api/payment/create-order:
+ *   post:
+ *     summary: Create Razorpay Order
+ *     tags: [Payment]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - amount
+ *             properties:
+ *               amount:
+ *                 type: number
+ *                 example: 500
+ *     responses:
+ *       200:
+ *         description: Razorpay order created
+ */
+
+/**
+ * @swagger
+ * /api/payment/verify-payment:
+ *   post:
+ *     summary: Verify Razorpay Payment and Place Order
+ *     tags: [Payment]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               razorpay_order_id:
+ *                 type: string
+ *               razorpay_payment_id:
+ *                 type: string
+ *               razorpay_signature:
+ *                 type: string
+ *               userId:
+ *                 type: string
+ *               totalAmount:
+ *                 type: number
+ *               deliveryAddress:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Payment verified & order saved
+ */
 
 import swaggerJSDoc from "swagger-jsdoc";
 import path from "path";

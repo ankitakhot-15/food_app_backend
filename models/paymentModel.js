@@ -10,6 +10,7 @@ const paymentSchema = new mongoose.Schema(
     orderId: {
       type: String, // Razorpay Order ID
       required: true,
+      unique: true, // ensure each order is stored only once
     },
     paymentId: {
       type: String, // Razorpay Payment ID
@@ -20,6 +21,7 @@ const paymentSchema = new mongoose.Schema(
     amount: {
       type: Number,
       required: true,
+      min: 1, // ensure positive amount
     },
     currency: {
       type: String,
@@ -27,11 +29,11 @@ const paymentSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["created", "success", "failed"],
+      enum: ["created", "success", "failed"], // matches your controller
       default: "created",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Payment = mongoose.model("Payment", paymentSchema);

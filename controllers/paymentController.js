@@ -23,25 +23,23 @@ export const createPaymentOrder = async (req, res) => {
 
     const order = await razorpay.orders.create(options);
 
-    const payment = await Payment.create({
+    // Save order in DB
+    await Payment.create({
       user: userId,
       orderId: order.id,
       amount,
       currency: "INR",
-      status: "created",
+      status: "created", // matches schema enum
     });
 
     res.status(200).json({
-      success: true,
-      order,
-      payment,
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      success: false,
-      message: "Order creation failed",
-    });
+    res.status(500).json({ message: "Failed to create order" });
   }
 };
 
@@ -53,8 +51,8 @@ export const verifyPayment = async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
       req.body;
 
+    // Generate expected signature
     const sign = razorpay_order_id + "|" + razorpay_payment_id;
-
     const expectedSign = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
       .update(sign.toString())
@@ -68,13 +66,21 @@ export const verifyPayment = async (req, res) => {
     }
 
     // Update payment status in DB
-    await Payment.findOneAndUpdate(
+    const payment = await Payment.findOneAndUpdate(
       { orderId: razorpay_order_id },
       {
-        status: "paid",
+        status: "success", // corrected from "paid"
         paymentId: razorpay_payment_id,
       },
+      { new: true }
     );
+
+    if (!payment) {
+      return res.status(404).json({
+        success: false,
+        message: "Payment record not found",
+      });
+    }
 
     res.status(200).json({
       success: true,

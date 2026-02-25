@@ -38,6 +38,8 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: Razorpay order created successfully
+ *       400:
+ *         description: Invalid request
  *       500:
  *         description: Server error
  */
@@ -74,6 +76,8 @@ router.post("/create-order", createPaymentOrder);
  *         description: Payment verified successfully
  *       400:
  *         description: Invalid signature
+ *       404:
+ *         description: Payment record not found
  *       500:
  *         description: Server error
  */
